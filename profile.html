@@ -245,7 +245,7 @@
         let currentUser = null;
 
         // Check for existing session
-        window.onload = function() {
+        window.onload = async function() {
             const user = localStorage.getItem('currentUser');
             if (user) {
                 currentUser = JSON.parse(user);
