@@ -170,7 +170,7 @@
             document.body.style.background = `linear-gradient(135deg, #${Math.floor(Math.random()*16777215).toString(16)}, #${Math.floor(Math.random()*16777215).toString(16)}, #${Math.floor(Math.random()*16777215).toString(16)})`;
         }, 5000);
 
-        function signup() {
+        async function signup() {
             const username = document.getElementById('signupUsername').value;
             const email = document.getElementById('signupEmail').value;
             const password = document.getElementById('signupPassword').value;
@@ -188,16 +188,26 @@
                 joinDate: new Date().toISOString()
             };
 
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            if (users.find(u => u.email === email)) {
-                alert('Email already exists');
-                return;
-            }
+            try {
+                // Send user data to your GitHub repository
+                // Note: This requires a backend service to update the JSON file
+                const response = await fetch('https://your-backend-service.com/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(user)
+                });
 
-            users.push(user);
-            localStorage.setItem('users', JSON.stringify(users));
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            window.location.href = 'profile.html';
+                if (response.ok) {
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    window.location.href = 'profile.html';
+                } else {
+                    alert('Failed to create account. Please try again.');
+                }
+            } catch (error) {
+                alert('Error connecting to server. Please try again.');
+            }
         }
 
         function toggleAuth() {
